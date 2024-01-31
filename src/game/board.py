@@ -1,4 +1,5 @@
 
+
 class BoardConstants:
     @property
     def MIN_BOARD_SIZE(self):
@@ -15,7 +16,6 @@ class AmoebaBoard:
     """
     Class used to represent an amoebe board.
     A board is a two dimensional matrix, whose sides can be the same or differ.
-
     """
 
     def __init__(self, board_size) -> None:
@@ -25,8 +25,7 @@ class AmoebaBoard:
         board_size: int or tuple of ints
             yields the shape of the 2D board
         """
-        self._board_size = board_size
-        self._board = None
+        self._board_size = None
 
         def valid_num_board_size(board_size_number: int) -> bool:
             if not isinstance(board_size_number, int):
@@ -37,15 +36,19 @@ class AmoebaBoard:
 
         if isinstance(board_size, int):
             if valid_num_board_size(board_size):
-                self._board = (board_size, board_size)
+                self._board_size = (board_size, board_size)
         elif isinstance(board_size, tuple):
             if len(board_size) == 1:
                 board_size = board_size[0]
                 if valid_num_board_size(board_size):
-                    self._board = (board_size, board_size)
+                    self._board_size = (board_size, board_size)
             elif len(board_size) == 2:
                 if valid_num_board_size(board_size[0]) and valid_num_board_size(board_size[1]):
-                    self._board = board_size
+                    self._board_size = board_size
+            else:
+                raise ValueError(f"Invalid size of tuple. Len can be 1 or 2, but {len(board_size)} was given.")
+        else:
+            raise TypeError(f"Input must be integer or tuple, '{type(board_size)}' was given.")
 
     @property
     def board_size(self):
