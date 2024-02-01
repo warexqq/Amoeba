@@ -48,5 +48,5 @@ def test_amoeba_board_invalid_size_type(size):
 def test_amoeba_board_layout(size):
     test_board = board.AmoebaBoard(board_size=size)
     rows, cols = size
-    expected_board = np.array([[board.BoardCell.Empty for j in range(cols)] for i in range(rows)])
+    expected_board = np.array([[board.Cell.Empty for j in range(cols)] for i in range(rows)])
     assert str(test_board) == str(expected_board)
