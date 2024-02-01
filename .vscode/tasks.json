@@ -20,8 +20,7 @@
             "type": "shell",
             "command": "venv/Scripts/python.exe",
             "args": [
-                "-m",
-                "pytest"
+                "${file}"
             ],
             "problemMatcher": [],
             "group": {

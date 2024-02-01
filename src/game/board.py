@@ -1,3 +1,34 @@
+from enum import Enum
+
+
+class CellValue(Enum):
+    X = 'x'
+    O = 'o'
+
+
+class BoardCell:
+    def __init__(self) -> None:
+        self._value = None
+
+    @property
+    def value(self) -> CellValue:
+        return self._value
+
+    @value.setter
+    def value(self, new_val: CellValue) -> None:
+        if new_val in CellValue:
+            self._value = new_val
+
+    def __repr__(self) -> str:
+        return f"<BoardCell value: '{self._value}'>"
+
+    def __str__(self) -> str:
+        return str(self._value)
+
+    def __eq__(self, other):
+        if not isinstance(other, BoardCell):
+            return NotImplemented
+        return self.value == other.value
 
 
 class BoardConstants:
@@ -50,6 +81,19 @@ class AmoebaBoard:
         else:
             raise TypeError(f"Input must be integer or tuple, '{type(board_size)}' was given.")
 
+        rows, cols = self._board_size
+        self._board = [[BoardCell() for j in range(cols)] for i in range(rows)]
+
     @property
     def board_size(self):
         return self._board_size
+
+    @property
+    def board(self):
+        return self._board
+
+
+if __name__ == "__main__":
+    my_board = AmoebaBoard(3)
+    print(my_board.board)
+    print(my_board.board[0][0])

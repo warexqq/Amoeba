@@ -40,3 +40,11 @@ def test_amoeba_board_invalid_size_type(size):
     with pytest.raises(TypeError):
         test_board = board.AmoebaBoard(board_size=size)
         assert test_board is None
+
+
+@pytest.mark.parametrize("size", [(min_s,min_s), (mid_s,max_s), (max_s,max_s), (min_s,mid_s)])
+def test_amoeba_board_layout(size):
+    test_board = board.AmoebaBoard(board_size=size)
+    rows, cols = size
+    expected_board = [[board.BoardCell() for j in range(cols)] for i in range(rows)]
+    assert test_board.board == expected_board
