@@ -1,34 +1,17 @@
+import numpy as np
 from enum import Enum
 
 
-class CellValue(Enum):
+class BoardCell(Enum):
     X = 'x'
     O = 'o'
+    Empty = None
 
+    def __str__(self):
+        return str(self.value)
 
-class BoardCell:
-    def __init__(self) -> None:
-        self._value = None
-
-    @property
-    def value(self) -> CellValue:
-        return self._value
-
-    @value.setter
-    def value(self, new_val: CellValue) -> None:
-        if new_val in CellValue:
-            self._value = new_val
-
-    def __repr__(self) -> str:
-        return f"<BoardCell value: '{self._value}'>"
-
-    def __str__(self) -> str:
-        return str(self._value)
-
-    def __eq__(self, other):
-        if not isinstance(other, BoardCell):
-            return NotImplemented
-        return self.value == other.value
+    def __repr__(self):
+        return str(self.value)
 
 
 class BoardConstants:
@@ -82,7 +65,7 @@ class AmoebaBoard:
             raise TypeError(f"Input must be integer or tuple, '{type(board_size)}' was given.")
 
         rows, cols = self._board_size
-        self._board = [[BoardCell() for j in range(cols)] for i in range(rows)]
+        self._board = np.array([[BoardCell.Empty for j in range(cols)] for i in range(rows)], dtype=BoardCell)
 
     @property
     def board_size(self):
@@ -92,8 +75,21 @@ class AmoebaBoard:
     def board(self):
         return self._board
 
+    def __getitem__(self, item):
+        return self._board[item]
+
+    def __str__(self) -> str:
+        return str(self.board)
+
 
 if __name__ == "__main__":
     my_board = AmoebaBoard(3)
-    print(my_board.board)
-    print(my_board.board[0][0])
+    print(my_board.board.dtype)
+    print(my_board)
+    print(my_board[0])
+    print(my_board[0][0])
+
+    my_board[0][0] = BoardCell.X
+
+    print(my_board)
+    print(my_board[0][0])

@@ -7,8 +7,7 @@
             "label": "run",
             "type": "shell",
             "command": "venv/Scripts/python.exe",
-            "args": [
-            ],
+            "args": ["${file}"],
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -20,7 +19,8 @@
             "type": "shell",
             "command": "venv/Scripts/python.exe",
             "args": [
-                "${file}"
+                "-m",
+                "pytest"
             ],
             "problemMatcher": [],
             "group": {

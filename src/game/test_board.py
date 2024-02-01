@@ -1,6 +1,8 @@
 import pytest
+import numpy as np
 
 from src.game import board
+
 
 min_s = board.board_constants.MIN_BOARD_SIZE
 max_s = board.board_constants.MAX_BOARD_SIZE
@@ -46,5 +48,5 @@ def test_amoeba_board_invalid_size_type(size):
 def test_amoeba_board_layout(size):
     test_board = board.AmoebaBoard(board_size=size)
     rows, cols = size
-    expected_board = [[board.BoardCell() for j in range(cols)] for i in range(rows)]
-    assert test_board.board == expected_board
+    expected_board = np.array([[board.BoardCell.Empty for j in range(cols)] for i in range(rows)])
+    assert str(test_board) == str(expected_board)
