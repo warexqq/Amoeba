@@ -1,4 +1,7 @@
-import board
+import random
+from enum import Enum, auto
+
+from src.game import board
 
 
 class Player:
@@ -21,26 +24,87 @@ class Player:
         self._cell_mark = value
 
 
-
 class AmoebaGame:
-    def __init__(self, player1: Player, player2: Player, board_size = 3) -> None:
-        if not isinstance(player1, Player) or not isinstance(player2, Player):
-            raise TypeError(f"player1 and player2 shall be instances of {Player}")
-        self._player1 = player1
-        self._player2 = player2
+    class State(Enum):
+        INIT = auto()
+        READY = auto()
+        WAITING_FOR_X_TO_MOVE = auto()
+        WAITING_FOR_O_TO_MOVE = auto()
+        FINISH = auto()
+        ERROR = auto()
+
+    class IncorrectStateException(Exception):
+        """Custom exception for handling incorrect states in the game's internal state machine."""
+        def __init__(self, message="Function called in incorrect state"):
+            self.message = message
+            super().__init__(self.message)
+
+    def __init__(self, player_x: Player, player_o: Player, board_size = 3, row_size = 3) -> None:
+        if not player_x.cell_mark == board.Cell.X or player_o.cell_mark == board.Cell.O:
+            raise TypeError(f"player_x and player_o shall have the required cell marks.")
+        self._player_x = player_x
+        self._player_o = player_o
         self._board = board.AmoebaBoard(board_size)
+        if row_size < board.board_constants.MIN_BOARD_SIZE or row_size > board_size:
+            raise ValueError(f"row_size invalid size. Most be between {board.board_constants.MIN_BOARD_SIZE} and your chosen board_size ({board_size}).")
+        self._row_size = row_size
+        self._state = self.State.INIT
+        self._starting_side = None
 
     @property
-    def player1(self):
-        return self._player1
+    def player_x(self):
+        return self._player_x
 
     @property
-    def player2(self):
-        return self._player1
+    def player_o(self):
+        return self._player_o
 
     @property
-    def board(self):
+    def game_board(self):
         return self._board
+
+    def _check_row_complete(self):
+        pass
+
+    def choose_starting_side(self, starting_side) -> None:
+        """ Using player's decision, if its not X or O random side will be chosen."""
+        if self._state != self.State.INIT:
+            raise self.IncorrectStateException()
+
+        if starting_side == board.Cell.X or starting_side == board.Cell.O:
+            self._starting_side = starting_side
+        else:
+            self._starting_side = random.choice([board.Cell.X, board.Cell.O])
+
+        self._state = self.State.READY
+
+    def start_game(self):
+        if self._state not in (self.State.INIT, self.State.READY):
+            raise self.IncorrectStateException()
+
+        if not self._starting_side:
+            self.choose_starting_side("pick random")
+
+        if self._starting_side == board.Cell.X:
+            self._state = self.State.WAITING_FOR_X_TO_MOVE
+        elif self._starting_side == board.Cell.O:
+            self._state = self.State.WAITING_FOR_O_TO_MOVE
+        else:
+            self._state = self.State.ERROR
+            raise ValueError("Starting side shall be either X or O")
+
+    def next_player_move(self, place):
+        if self._state == self.State.WAITING_FOR_X_TO_MOVE:
+            self.game_board.update_cell(place, board.Cell.X)
+        elif self._state == self.State.WAITING_FOR_O_TO_MOVE:
+            self.game_board.update_cell(place, board.Cell.O)
+        else:
+            raise self.IncorrectStateException()
+
+        self._check_row_complete()
+
+    def finish_game(self):
+        pass
 
 
 

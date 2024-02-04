@@ -64,8 +64,14 @@ class AmoebaBoard:
         else:
             raise TypeError(f"Input must be integer or tuple, '{type(board_size)}' was given.")
 
-        rows, cols = self._board_size
-        self._board = np.array([[Cell.Empty for j in range(cols)] for i in range(rows)], dtype=Cell)
+        self._board = None
+        self._clear_board()
+
+    def __getitem__(self, item):
+        return self._board[item]
+
+    def __str__(self) -> str:
+        return str(self.board)
 
     @property
     def board_size(self):
@@ -75,11 +81,18 @@ class AmoebaBoard:
     def board(self):
         return self._board
 
-    def __getitem__(self, item):
-        return self._board[item]
+    def _clear_board(self):
+        rows, cols = self._board_size
+        self._board = np.array([[Cell.Empty for j in range(cols)] for i in range(rows)], dtype=Cell)
 
-    def __str__(self) -> str:
-        return str(self.board)
+    def update_cell(self, place: tuple, mark: Cell):
+        if not isinstance(place, tuple) and len(tuple) != 2:
+            raise ValueError("A place has to be a 2 elem tuple, with the coordinates of the mark")
+        if not isinstance(mark, Cell):
+            raise TypeError("A mark has to be Cell type")
+
+        x, y = place
+        self._board[x][y] = mark
 
 
 
