@@ -1,9 +1,10 @@
 from src.game import board
 
+
 class Player:
     def __init__(self, name, cell_mark: board.Cell) -> None:
         self._name = name
-        self._cell_mark = cell_mark
+        self.cell_mark = cell_mark
 
     @property
     def name(self):

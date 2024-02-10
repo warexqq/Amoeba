@@ -1,7 +1,7 @@
 import random
 from enum import Enum, auto
 
-from . import board, player
+from src.game import board, player
 
 
 class State(Enum):
@@ -33,6 +33,7 @@ class AmoebaGame:
             raise ValueError(f"win_length invalid size. Most be between {board.BoardConstants.MIN_BOARD_SIZE} and your chosen board_size ({board_size}).")
         self._win_length = win_length
         self._state = State.INIT
+        self._winning_sequence = None
 
     @property
     def player_x(self):
@@ -54,7 +55,11 @@ class AmoebaGame:
     def state(self):
         return self._state
 
-    def choose_starting_side(self, starting_side) -> None:
+    @property
+    def winning_sequence(self):
+        return self._winning_sequence
+
+    def choose_starting_side(self, starting_side: board.Cell) -> None:
         """ Using player's decision, if its not X or O random side will be chosen."""
         if self.state != State.INIT:
             raise State.IncorrectStateException()
@@ -73,6 +78,8 @@ class AmoebaGame:
         if not self._starting_side:
             self.choose_starting_side("pick random")
 
+        self._winning_sequence = None
+
         if self._starting_side == board.Cell.X:
             self._state = State.WAITING_FOR_X_TO_MOVE
         elif self._starting_side == board.Cell.O:
@@ -86,6 +93,7 @@ class AmoebaGame:
             self.game_board.update_cell(place, board.Cell.X)
             seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
             if seq:
+                self._winning_sequence = seq
                 self._state = State.FINISH
             else:
                 self._state = State.WAITING_FOR_O_TO_MOVE
@@ -93,6 +101,7 @@ class AmoebaGame:
             self.game_board.update_cell(place, board.Cell.O)
             seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
             if seq:
+                self._winning_sequence = seq
                 self._state = State.FINISH
             else:
                 self._state = State.WAITING_FOR_X_TO_MOVE
@@ -116,36 +125,31 @@ class AmoebaGame:
             sequence = [last_move]
             for elem in range(1, self.win_length):          # Iterate up towards Direction
                 new_row, new_col = row + elem * drow, col + elem * dcol
-                if in_range(new_row, new_col) and self.game_board.board[new_row, new_col] == player_mark.value:
+                if in_range(new_row, new_col) and self.game_board.board[new_row, new_col] == player_mark:
                     sequence.append((new_row, new_col))
                 else:
                     break
             for elem in range(1, self.win_length):          # Iterate backwards from last move
                 new_row, new_col = row - elem * drow, col - elem * dcol
-                if in_range(new_row, new_col) and self.game_board.board[new_row, new_col] == player_mark.value:
+                if in_range(new_row, new_col) and self.game_board.board[new_row, new_col] == player_mark:
                     sequence.insert(0,(new_row, new_col))
                 else:
                     break
             return sequence
 
-
         sequence = get_sequence(Direction.HORIZONTAL)
-        print(sequence)
         if len(sequence) >= self.win_length:
             return sequence
 
         sequence = get_sequence(Direction.VERTICAL)
-        print(sequence)
         if len(sequence) >= self.win_length:
             return sequence
 
         sequence = get_sequence(Direction.MAIN_DIAGONAL)
-        print(sequence)
         if len(sequence) >= self.win_length:
             return sequence
 
         sequence = get_sequence(Direction.ANTI_DIAGONAL)
-        print(sequence)
         if len(sequence) >= self.win_length:
             return sequence
 
