@@ -4,8 +4,8 @@ import numpy as np
 from src.game import board
 
 
-min_s = board.board_constants.MIN_BOARD_SIZE
-max_s = board.board_constants.MAX_BOARD_SIZE
+min_s = board.BoardConstants.MIN_BOARD_SIZE
+max_s = board.BoardConstants.MAX_BOARD_SIZE
 mid_s = int( (max_s + min_s) / 2 )
 
 

@@ -15,15 +15,8 @@ class Cell(Enum):
 
 
 class BoardConstants:
-    @property
-    def MIN_BOARD_SIZE(self):
-        return 3
-
-    @property
-    def MAX_BOARD_SIZE(self):
-        return 30
-
-board_constants = BoardConstants()
+    MIN_BOARD_SIZE = 3
+    MAX_BOARD_SIZE = 30
 
 
 class AmoebaBoard:
@@ -44,7 +37,7 @@ class AmoebaBoard:
         def valid_num_board_size(board_size_number: int) -> bool:
             if not isinstance(board_size_number, int):
                 raise TypeError(f"Input shall be an integer, but '{type(board_size_number)}' was given.")
-            if not board_constants.MIN_BOARD_SIZE <= board_size_number <= board_constants.MAX_BOARD_SIZE:
+            if not BoardConstants.MIN_BOARD_SIZE <= board_size_number <= BoardConstants.MAX_BOARD_SIZE:
                 raise ValueError(f"'{board_size_number}' is not a valid number.")
             return True
 
