@@ -23,7 +23,7 @@ class State(Enum):
 class AmoebaGame:
 
     def __init__(self, player_x: player.Player, player_o: player.Player, board_size = 3, win_length = 3) -> None:
-        if player_x.cell_mark != board.Cell.X or player_o.cell_mark != board.Cell.O:
+        if player_x.cell_mark != board.Mark.X or player_o.cell_mark != board.Mark.O:
             raise TypeError(f"player_x and player_o shall have the required cell marks.")
         self._player_x = player_x
         self._player_o = player_o
@@ -64,15 +64,15 @@ class AmoebaGame:
     def winner(self):
         return self._winner
 
-    def choose_starting_side(self, starting_side: board.Cell) -> None:
+    def choose_starting_side(self, starting_side: board.Mark) -> None:
         """ Using player's decision, if its not X or O random side will be chosen."""
         if self.state != State.INIT:
             raise State.IncorrectStateException()
 
-        if starting_side == board.Cell.X or starting_side == board.Cell.O:
+        if starting_side == board.Mark.X or starting_side == board.Mark.O:
             self._starting_side = starting_side
         else:
-            self._starting_side = random.choice([board.Cell.X, board.Cell.O])
+            self._starting_side = random.choice([board.Mark.X, board.Mark.O])
 
         self._state = State.READY
 
@@ -85,9 +85,9 @@ class AmoebaGame:
 
         self._winning_sequence = None
 
-        if self._starting_side == board.Cell.X:
+        if self._starting_side == board.Mark.X:
             self._state = State.WAITING_FOR_X_TO_MOVE
-        elif self._starting_side == board.Cell.O:
+        elif self._starting_side == board.Mark.O:
             self._state = State.WAITING_FOR_O_TO_MOVE
         else:
             self._state = State.ERROR
@@ -95,7 +95,7 @@ class AmoebaGame:
 
     def next_player_move(self, place):
         if self.state == State.WAITING_FOR_X_TO_MOVE:
-            self.game_board.update_cell(place, board.Cell.X)
+            self.game_board.update_cell(place, board.Mark.X)
             seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
             if seq:
                 self._winning_sequence = seq
@@ -104,7 +104,7 @@ class AmoebaGame:
             else:
                 self._state = State.WAITING_FOR_O_TO_MOVE
         elif self.state == State.WAITING_FOR_O_TO_MOVE:
-            self.game_board.update_cell(place, board.Cell.O)
+            self.game_board.update_cell(place, board.Mark.O)
             seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
             if seq:
                 self._winning_sequence = seq
@@ -115,7 +115,7 @@ class AmoebaGame:
         else:
             raise State.IncorrectStateException()
 
-    def find_winning_sequence(self, player_mark: board.Cell, last_move: tuple[int, int]) -> list:
+    def find_winning_sequence(self, player_mark: board.Mark, last_move: tuple[int, int]) -> list:
         # Function to find the winning sequence of marks for a specific player
         class Direction:
             HORIZONTAL    = (0, 1)

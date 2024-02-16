@@ -2,16 +2,10 @@ import numpy as np
 from enum import Enum
 
 
-class Cell(Enum):
+class Mark(Enum):
     X = 'x'
     O = 'o'
     Empty = None
-
-    def __str__(self):
-        return str(self.value)
-
-    def __repr__(self):
-        return str(self.value)
 
 
 class BoardConstants:
@@ -76,16 +70,16 @@ class AmoebaBoard:
 
     def _clear_board(self):
         rows, cols = self._board_size
-        self._board = np.array([[Cell.Empty for j in range(cols)] for i in range(rows)], dtype=Cell)
+        self._board = np.array([[Mark.Empty for j in range(cols)] for i in range(rows)], dtype=Mark)
 
-    def update_cell(self, place: tuple, mark: Cell):
+    def update_cell(self, place: tuple, cell_mark: Mark):
         if not isinstance(place, tuple) and len(tuple) != 2:
             raise ValueError("A place has to be a 2 elem tuple, with the coordinates of the mark")
-        if not isinstance(mark, Cell):
-            raise TypeError("A mark has to be Cell type")
+        if not isinstance(cell_mark, Mark):
+            raise TypeError("A mark has to be Mark type")
 
         x, y = place
-        self._board[x][y] = mark
+        self._board[x][y] = cell_mark
 
 
 
@@ -96,7 +90,7 @@ if __name__ == "__main__":
     print(my_board[0])
     print(my_board[0][0])
 
-    my_board[0][0] = Cell.X
+    my_board[0][0] = Mark.X
 
     print(my_board)
     print(my_board[0][0])

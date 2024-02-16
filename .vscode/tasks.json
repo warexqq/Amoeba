@@ -7,7 +7,7 @@
             "label": "run",
             "type": "shell",
             "command": ".venv/Scripts/python.exe",
-            "args": ["${file}"],
+            "args": ["main.py"],
             "problemMatcher": [],
             "options": {
                 "cwd": "${workspaceFolder}"

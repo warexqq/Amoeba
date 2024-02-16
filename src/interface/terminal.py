@@ -12,20 +12,17 @@ class SimpleTerminalIF:
         return self._game
 
     def add_player(self):
-        print('Adding new player!')
+        print('Adding new player..')
         name = survey.routines.input('Player name: ')
-        _marks = (logic.board.Cell.X, logic.board.Cell.O)
+        new_player = logic.player.Player(name)
+
+        _marks = (logic.board.Mark.X.value, logic.board.Mark.O.value)
         mark = survey.routines.select('Select a mark: ', options= _marks)
-        new_player = logic.player.Player(name, mark)
+        new_player.cell_mark = logic.board.Mark(_marks[mark])
+
         self._players[name] = new_player
         print(f'New player added: {new_player}')
 
 
     def play(self):
         pass
-
-
-
-if __name__ == "__main__":
-    term = SimpleTerminalIF()
-    term.add_player()
