@@ -33,6 +33,7 @@ class AmoebaGame:
             raise ValueError(f"win_length invalid size. Most be between {board.BoardConstants.MIN_BOARD_SIZE} and your chosen board_size ({board_size}).")
         self._win_length = win_length
         self._state = State.INIT
+        self._winner = None
         self._winning_sequence = None
 
     @property
@@ -58,6 +59,10 @@ class AmoebaGame:
     @property
     def winning_sequence(self):
         return self._winning_sequence
+
+    @property
+    def winner(self):
+        return self._winner
 
     def choose_starting_side(self, starting_side: board.Cell) -> None:
         """ Using player's decision, if its not X or O random side will be chosen."""
@@ -94,6 +99,7 @@ class AmoebaGame:
             seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
             if seq:
                 self._winning_sequence = seq
+                self._winner = self.player_x
                 self._state = State.FINISH
             else:
                 self._state = State.WAITING_FOR_O_TO_MOVE
@@ -102,6 +108,7 @@ class AmoebaGame:
             seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
             if seq:
                 self._winning_sequence = seq
+                self._winner = self.player_o
                 self._state = State.FINISH
             else:
                 self._state = State.WAITING_FOR_X_TO_MOVE
@@ -156,4 +163,10 @@ class AmoebaGame:
         return []
 
     def finish_game(self):
-        pass
+        if self.state == State.FINISH:
+            print(f"Winner is {self.winner}!")
+            print("Winning sequence is:")
+            print(self.winning_sequence)
+        else:
+            self.state = State.FINISH
+            print("Game was stopped.")
