@@ -23,6 +23,8 @@ class SimpleTerminalIF:
         self._players[name] = new_player
         print(f'New player added: {new_player}')
 
+    def board_setup():
+        survey.routines.numeric('Board size: ', decimal= True)
 
     def play(self):
-        pass
+        self._game = logic.AmoebaGame()
