@@ -105,7 +105,7 @@ class AmoebaGame:
                 self._state = State.WAITING_FOR_O_TO_MOVE
         elif self.state == State.WAITING_FOR_O_TO_MOVE:
             self.game_board.update_cell(place, board.Mark.O)
-            seq = self.find_winning_sequence(player_mark=self.player_x.cell_mark, last_move=place)
+            seq = self.find_winning_sequence(player_mark=self.player_o.cell_mark, last_move=place)
             if seq:
                 self._winning_sequence = seq
                 self._winner = self.player_o

@@ -7,6 +7,12 @@ class Mark(Enum):
     O = 'o'
     Empty = None
 
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return self.name
+
 
 class BoardConstants:
     MIN_BOARD_SIZE = 3

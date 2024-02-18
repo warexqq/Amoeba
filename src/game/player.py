@@ -9,6 +9,9 @@ class Player:
     def __str__(self) -> str:
         return f"<Player> {self.name} : {self.cell_mark}"
 
+    def __repr__(self) -> str:
+        return f"<Player> {self.name} : {self.cell_mark}"
+
     @property
     def name(self):
         return self._name
